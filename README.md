@@ -1,2 +1,2 @@
 # MiniEngine3D
-Uma mini renderizador 3D 
+Mini renderizador 3D
