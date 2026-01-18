@@ -1,23 +1,53 @@
 @echo off
+echo ===============================
+echo  Compilando Rasterizador 3D
+echo ===============================
 
-set SRC=main.cpp
-set OUT=bin\main.exe
-set SDL_PATH=libs\SDL2
+REM ---- CONFIGURACAO ----
+set COMPILER=g++
+set OUTPUT=raster.exe
 
-g++ src\main.cpp -I third_party\SDL2\include -L third_party\SDL2\lib -lmingw32 -lSDL2main -lSDL2 -mconsole -o %OUT%
+REM Caminho da SDL2 (ajuste se necessario)
+set SDL2_PATH=C:\libs\SDL2\x86_64-w64-mingw32
 
+REM ---- FLAGS ----
+set INCLUDE_FLAGS=-I include -I third_party\SDL2\include
+set LIB_FLAGS=-L third_party\SDL2\lib -lmingw32 -lSDL2main -lSDL2 -mconsole
 
+set CFLAGS=-std=c++17 -Wall
 
-if %errorlevel% neq 0 (
+REM ---- LIMPA BUILD ANTIGO ----
+if exist %OUTPUT% del %OUTPUT%
+
+REM ---- COMPILACAO ----
+%COMPILER% ^
+src\main.cpp ^
+src\math\vector.cpp ^
+src\math\matrix.cpp ^
+src\render\render.cpp ^
+src\scene\cube.cpp ^
+%INCLUDE_FLAGS% ^
+%LIB_FLAGS% ^
+%CFLAGS% ^
+-o %OUTPUT%
+
+REM ---- RESULTADO ----
+if %ERRORLEVEL% neq 0 (
     echo.
-    echo Erro na compilacao!
-    echo %SRC%
-    echo %SDL_PATH%
+    echo ❌ ERRO NA COMPILACAO
     pause
-    exit /b %errorlevel%
+    exit /b 1
 )
 
-%OUT%
+echo.
+echo ✅ Build concluido com sucesso!
+echo Executavel: %OUTPUT%
+pause
 
-cls
+
+REM g++ src\main.cpp -I third_party\SDL2\include -L third_party\SDL2\lib -lmingw32 -lSDL2main -lSDL2 -mconsole -o %OUT%
+
+
+
+
 
