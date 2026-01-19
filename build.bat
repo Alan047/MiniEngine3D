@@ -5,7 +5,7 @@ echo ===============================
 
 REM ---- CONFIGURACAO ----
 set COMPILER=g++
-set OUTPUT=raster.exe
+set OUTPUT=bin\app.exe
 
 REM Caminho da SDL2 (ajuste se necessario)
 set SDL2_PATH=C:\libs\SDL2\x86_64-w64-mingw32
@@ -42,6 +42,7 @@ if %ERRORLEVEL% neq 0 (
 echo.
 echo ✅ Build concluido com sucesso!
 echo Executavel: %OUTPUT%
+%OUTPUT%
 pause
 
 

@@ -98,31 +98,45 @@ int main(int argc, char* argv[]) {
         }
 
         // -------- DRAW TRIANGLES --------
-        for (int t = 0; t < 12; t++) {
 
-            int i0 = cubeTriangles[t][0];
-            int i1 = cubeTriangles[t][1];
-            int i2 = cubeTriangles[t][2];
+        Vec3 v0 = {200, 200, 0};
+        Vec3 v1 = {400, 200, 0};
+        Vec3 v2 = {400, 400, 0};
+        Vec3 v3 = {200, 400, 0};
 
-            Vec3 v0 = projected[i0];
-            Vec3 v1 = projected[i1];
-            Vec3 v2 = projected[i2];
+        drawTriangle(framebuffer, v0, v1, v2, 0xFF00FF00);
+        drawTriangle(framebuffer, v0, v2, v3, 0xFFFF0000);
 
-            drawTriangle(framebuffer, v0, v1, v2, 0xFF00FF00);
-        }
+        drawLine(framebuffer, v0.x, v0.y, v1.x, v1.y, 0xFFFFFFFF);
+        drawLine(framebuffer, v1.x, v1.y, v2.x, v2.y, 0xFFFFFFFF);
+        drawLine(framebuffer, v2.x, v2.y, v0.x, v0.y, 0xFFFFFFFF);
 
-        // -------- WIREFRAME DEBUG --------
-        for (int e = 0; e < 12; e++) {
-            int a = cubeEdges[e][0];
-            int b = cubeEdges[e][1];
 
-            drawLine(
-                framebuffer,
-                projected[a].x, projected[a].y,
-                projected[b].x, projected[b].y,
-                0xFFFFFFFF
-            );
-        }
+        // for (int t = 0; t < 12; t++) {
+
+        //     int i0 = cubeTriangles[t][0];
+        //     int i1 = cubeTriangles[t][1];
+        //     int i2 = cubeTriangles[t][2];
+
+        //     Vec3 v0 = projected[i0];
+        //     Vec3 v1 = projected[i1];
+        //     Vec3 v2 = projected[i2];
+
+        //     drawTriangle(framebuffer, v0, v1, v2, 0xFF00FF00);
+        // }
+
+        // // -------- WIREFRAME DEBUG --------
+        // for (int e = 0; e < 12; e++) {
+        //     int a = cubeEdges[e][0];
+        //     int b = cubeEdges[e][1];
+
+        //     drawLine(
+        //         framebuffer,
+        //         projected[a].x, projected[a].y,
+        //         projected[b].x, projected[b].y,
+        //         0xFFFFFFFF
+        //     );
+        // }
 
         // -------- PRESENT --------
         SDL_UpdateTexture(texture, nullptr,
