@@ -12,11 +12,15 @@
 #include "render/line.hpp"
 #include "render/triangle.hpp"
 #include "render/culling.hpp"
+#include "render/VertexRender.hpp"
 
 #include "scene/cube.hpp"
 
 
+
 int main(int argc, char* argv[]) {
+
+    std::uint32_t* framebuffer = new std::uint32_t[WIDTH * HEIGHT];
 
     // ======================
     // SDL INIT
@@ -81,20 +85,21 @@ int main(int argc, char* argv[]) {
         clear(framebuffer, 0xFF202020);
 
         // -------- PROJECT VERTICES --------
-        
 
-        // -------- WIREFRAME DEBUG --------
-        for (int e = 0; e < 12; e++) {
-            int a = cubeEdges[e][0];
-            int b = cubeEdges[e][1];
+       
+        VertexRender(framebuffer, mvp, objCube);
 
-            drawLine(
-                framebuffer,
-                projected[a].x, projected[a].y,
-                projected[b].x, projected[b].y,
-                0xFFFFFFFF
-            );
-        }
+        model = translacao(4, 0, 8) * rotacaoY(angle);
+        mvp   = projection * view * model;
+
+        VertexRender(framebuffer, mvp, objPyramid);
+
+        model = translacao(-4, 0, 5) * rotacaoY(angle);
+        mvp   = projection * view * model;
+
+        VertexRender(framebuffer, mvp, objLShape);
+
+
 
         // -------- PRESENT --------
         SDL_UpdateTexture(texture, nullptr,

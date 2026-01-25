@@ -1,4 +1,5 @@
 #pragma once
 #include "core/types.hpp"
+#include <cstdint>
 
-Vec3 VertexRender(Mat4 mvp, Vec3 vertices);
+void VertexRender(uint32_t* fb, Mat4 mvp, Obj &obj);

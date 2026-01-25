@@ -25,6 +25,7 @@ src\main.cpp ^
 src\math\vector.cpp ^
 src\math\matrix.cpp ^
 src\render\render.cpp ^
+src\render\VertexRender.cpp ^
 src\scene\cube.cpp ^
 %INCLUDE_FLAGS% ^
 %LIB_FLAGS% ^

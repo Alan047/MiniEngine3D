@@ -4,3 +4,6 @@
 extern Vec3 cubeVertices[8];
 extern int cubeEdges[12][2];
 extern int cubeTriangles[12][3];
+extern Obj objCube;
+extern Obj objPyramid;
+extern Obj objLShape;
