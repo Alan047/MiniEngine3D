@@ -42,7 +42,6 @@ int main(int argc, char* argv[]) {
             WIDTH, HEIGHT
         );
 
-    uint32_t* framebuffer = new uint32_t[WIDTH * HEIGHT];
 
     // ======================
     // CAMERA & PROJECTION
@@ -72,7 +71,7 @@ int main(int argc, char* argv[]) {
         }
 
         // -------- UPDATE --------
-        angle += 0.01f;
+        angle += 0.001f;
 
         Mat4 model = translacao(0, 0, 6) * rotacaoY(angle);
         Mat4 view  = look(cameraPos, cameraTarget, cameraUp);
@@ -82,61 +81,20 @@ int main(int argc, char* argv[]) {
         clear(framebuffer, 0xFF202020);
 
         // -------- PROJECT VERTICES --------
-        Vec3 projected[8];
+        
 
-        for (int i = 0; i < 8; i++) {
-            Vec4 clip = transform4(mvp, cubeVertices[i]);
+        // -------- WIREFRAME DEBUG --------
+        for (int e = 0; e < 12; e++) {
+            int a = cubeEdges[e][0];
+            int b = cubeEdges[e][1];
 
-            float ndcX = clip.x / clip.w;
-            float ndcY = clip.y / clip.w;
-            float ndcZ = clip.z / clip.w;
-
-            int sx = toScreenX(ndcX);
-            int sy = toScreenY(ndcY);
-
-            projected[i] = { (float)sx, (float)sy, ndcZ };
+            drawLine(
+                framebuffer,
+                projected[a].x, projected[a].y,
+                projected[b].x, projected[b].y,
+                0xFFFFFFFF
+            );
         }
-
-        // -------- DRAW TRIANGLES --------
-
-        Vec3 v0 = {200, 200, 0};
-        Vec3 v1 = {400, 200, 0};
-        Vec3 v2 = {400, 400, 0};
-        Vec3 v3 = {200, 400, 0};
-
-        drawTriangle(framebuffer, v0, v1, v2, 0xFF00FF00);
-        drawTriangle(framebuffer, v0, v2, v3, 0xFFFF0000);
-
-        drawLine(framebuffer, v0.x, v0.y, v1.x, v1.y, 0xFFFFFFFF);
-        drawLine(framebuffer, v1.x, v1.y, v2.x, v2.y, 0xFFFFFFFF);
-        drawLine(framebuffer, v2.x, v2.y, v0.x, v0.y, 0xFFFFFFFF);
-
-
-        // for (int t = 0; t < 12; t++) {
-
-        //     int i0 = cubeTriangles[t][0];
-        //     int i1 = cubeTriangles[t][1];
-        //     int i2 = cubeTriangles[t][2];
-
-        //     Vec3 v0 = projected[i0];
-        //     Vec3 v1 = projected[i1];
-        //     Vec3 v2 = projected[i2];
-
-        //     drawTriangle(framebuffer, v0, v1, v2, 0xFF00FF00);
-        // }
-
-        // // -------- WIREFRAME DEBUG --------
-        // for (int e = 0; e < 12; e++) {
-        //     int a = cubeEdges[e][0];
-        //     int b = cubeEdges[e][1];
-
-        //     drawLine(
-        //         framebuffer,
-        //         projected[a].x, projected[a].y,
-        //         projected[b].x, projected[b].y,
-        //         0xFFFFFFFF
-        //     );
-        // }
 
         // -------- PRESENT --------
         SDL_UpdateTexture(texture, nullptr,
