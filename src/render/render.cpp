@@ -36,13 +36,13 @@ void drawLine(uint32_t* fb, int x1, int y1, int x2, int y2, uint32_t color) {
 
         if (x1 == x2 && y1 == y2) break;
 
-        int e2 = 2 * err;
+        int err2 = 2 * err;
 
-        if (e2 > -dy) {
+        if (err2 > -dy) {
             err -= dy;
             x1 += sx;
         }
-        if (e2 < dx) {
+        if (err2 < dx) {
             err += dx;
             y1 += sy;
         }

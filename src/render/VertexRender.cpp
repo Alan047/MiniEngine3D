@@ -3,6 +3,7 @@
 #include "math/matrix.hpp"
 #include "math/vector.hpp"
 #include "render/triangle.hpp"
+#include "render/line.hpp"
 #include "render/framebuffer.hpp"
 #include "core/config.hpp"
 #include <vector>
@@ -36,6 +37,9 @@ void VertexRender(uint32_t* fb, Mat4 mvp, Obj &obj) {
 
 
         drawTriangle(fb, v0, v1, v2, 0xFF00FF00);
+
+        drawLine(fb, v0.x, v0.y, v2.x, v2.y, 0xFFFFFFFF);
+
     }
 }
 
