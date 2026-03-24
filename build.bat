@@ -22,10 +22,16 @@ if exist %OUTPUT% del %OUTPUT%
 REM ---- COMPILACAO ----
 %COMPILER% ^
 src\main.cpp ^
-src\math\vector.cpp ^
-src\math\matrix.cpp ^
-src\render\render.cpp ^
-src\scene\cube.cpp ^
+src\core\Engine.cpp ^
+src\platform\WindowSDL.cpp ^
+src\graphics\SoftwareRenderer.cpp ^
+src\math\Vec3.cpp ^
+src\math\Vec4.cpp ^
+src\math\Mat4.cpp ^
+src\graphics\Mesh.cpp ^
+src\graphics\Camera.cpp ^
+src\scene\Scene.cpp ^
+src\scene\Transform.cpp ^
 %INCLUDE_FLAGS% ^
 %LIB_FLAGS% ^
 %CFLAGS% ^
