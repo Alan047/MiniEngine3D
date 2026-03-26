@@ -9,6 +9,7 @@ SoftwareRenderer::SoftwareRenderer(SDL_Renderer* renderer,
     : renderer(renderer),
       width(width),
       height(height)
+      
 {
     // cria textura para desenhar pixels
     texture = SDL_CreateTexture(
@@ -21,11 +22,13 @@ SoftwareRenderer::SoftwareRenderer(SDL_Renderer* renderer,
 
     // aloca framebuffer
     framebuffer = new uint32_t[width * height];
+    zbuffer = new float[width * height];
 }
 
 SoftwareRenderer::~SoftwareRenderer()
 {
     delete[] framebuffer;
+    delete[] zbuffer;
     SDL_DestroyTexture(texture);
 }
 
@@ -34,6 +37,7 @@ void SoftwareRenderer::clear(uint32_t color)
     for (int i = 0; i < width * height; i++)
     {
         framebuffer[i] = color;
+        zbuffer[i] = 1.0f;
     }
 }
 
@@ -158,7 +162,23 @@ void SoftwareRenderer::drawTriangle(const Vec3& v0,
             if ((w0 >= 0 && w1 >= 0 && w2 >= 0) ||
                 (w0 <= 0 && w1 <= 0 && w2 <= 0))
             {
-                drawPixel(x, y, color);
+                // normaliza pesos
+                w0/=area;
+                w1/=area;
+                w2/=area;
+
+                // interpolar Z
+                float z = w0 * v0.z + w1 * v1.z + w2 * v2.z;
+
+                int index = y * width + x;
+
+                // teste de profundidade
+                if (z < zbuffer[index]) {
+
+                    zbuffer[index] = z;
+                    drawPixel(x, y, color);
+                }
+                
             }
         }
     }

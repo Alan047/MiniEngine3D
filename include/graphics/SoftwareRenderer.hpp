@@ -24,6 +24,7 @@ private:
     SDL_Texture* texture;
 
     uint32_t* framebuffer;
+    float* zbuffer;
 
     int width;
     int height;

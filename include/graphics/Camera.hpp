@@ -12,6 +12,7 @@ public:
 
     void setPosition(const Vec3& pos);
     void setTarget(const Vec3& t);
+    bool isBackFacing(const Vec3& a, const Vec3& b, const Vec3& c);
 
 private:
     Vec3 position;
