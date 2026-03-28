@@ -4,3 +4,5 @@
 //     return &Mesh::loadObj(path);
     
 // }
+
+GameObject::GameObject() : color(0xFFFFFFFF) {}

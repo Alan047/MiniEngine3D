@@ -2,10 +2,12 @@
 
 Camera::Camera(float width, float height)
 {
-    position = {0, 0, -5};
+    position = {0, 5, -5};
     target = {0, 0, 0};
+    up = {0, 1, 0};
+    
 
-    fov = 45.0f * 3.14159f / 180.0f;
+    fov = 90.0f * 3.14159f / 180.0f;
     aspect = width / height;
     nearPlane = 0.1f;
     farPlane = 100.0f;
@@ -18,7 +20,7 @@ Mat4 Camera::getViewMatrix() const
     return Mat4::lookAt(
         position,
         target,
-        {0, 1, 0}
+        up
     );
 }
 

@@ -22,4 +22,5 @@ private:
     float nearPlane;
     float farPlane;
     Vec3 target;
+    Vec3 up;
 };

@@ -32,6 +32,7 @@ src\graphics\Mesh.cpp ^
 src\graphics\Camera.cpp ^
 src\scene\Scene.cpp ^
 src\scene\Transform.cpp ^
+src\scene\GameObject.cpp ^
 %INCLUDE_FLAGS% ^
 %LIB_FLAGS% ^
 %CFLAGS% ^

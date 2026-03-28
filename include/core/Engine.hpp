@@ -12,6 +12,8 @@ class Engine {
 public:
     Engine();
     void run();
+    void drawGrid();
+    bool clipLineNear(Vec4& a, Vec4& b, float near);
 
 private:
     bool running;

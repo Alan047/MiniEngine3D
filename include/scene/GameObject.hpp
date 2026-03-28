@@ -10,5 +10,7 @@ public:
     Mesh* mesh;
     uint32_t color;
 
+    GameObject();
+
     Mesh CarregarMesh(const std::string& path);
 };
