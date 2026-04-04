@@ -5,7 +5,7 @@
 #include "math/Mat4.hpp"
 #include "graphics/Camera.hpp"
 #include "scene/Scene.hpp"
-#include "graphics/Camera.hpp"
+
 
 
 class Engine {
@@ -25,5 +25,6 @@ private:
     Mesh cubeMesh;
     Mesh box;
     Mesh triangulo1;
+    Mesh table;
     
 };

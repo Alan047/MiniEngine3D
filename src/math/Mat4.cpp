@@ -1,5 +1,6 @@
 #include "math/Mat4.hpp"
 #include <cmath>
+#include <iostream>
 
 Mat4 Mat4::identity()
 {
@@ -33,6 +34,17 @@ Mat4 Mat4::rotationY(float angle)
     result.m[0][2] =  s;
     result.m[2][0] = -s;
     result.m[2][2] =  c;
+
+    return result;
+}
+
+Mat4 Mat4::scale(float sx, float sy, float sz)
+{
+    Mat4 result = identity();
+
+    result.m[0][0] = sx;
+    result.m[1][1] = sy;
+    result.m[2][2] = sz;
 
     return result;
 }
@@ -100,7 +112,7 @@ Mat4 Mat4::perspective(float fov,
     result.m[1][1] = f;
     result.m[2][2] = (far + near) / (near - far);
     result.m[2][3] = (2 * far * near) / (near - far);
-    result.m[3][2] = -1.0f;
+    result.m[3][2] = 1.0f; //  reverder para negativo 
 
     return result;
 }
@@ -123,13 +135,13 @@ Mat4 Mat4::lookAt(const Vec3& eye,
     result.m[1][1] = cameraUp.y;
     result.m[1][2] = cameraUp.z;
 
-    result.m[2][0] = -forward.x;
-    result.m[2][1] = -forward.y;
-    result.m[2][2] = -forward.z;
+    result.m[2][0] = forward.x;
+    result.m[2][1] = forward.y;
+    result.m[2][2] = forward.z;
 
     result.m[0][3] = -Vec3::dot(right, eye);
     result.m[1][3] = -Vec3::dot(cameraUp, eye);
-    result.m[2][3] =  Vec3::dot(forward, eye);
+    result.m[2][3] = -Vec3::dot(forward, eye);
 
     return result;
 }

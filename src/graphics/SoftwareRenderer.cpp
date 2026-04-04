@@ -71,6 +71,10 @@ Vec3 SoftwareRenderer::project(const Vec3& point,
     Vec4 v(point.x, point.y, point.z, 1.0f);
     Vec4 projected = mvp * v;
 
+    if (projected.w == 0.0f) return {0, 0, 0};
+
+    if (projected.w < 0.0f) return {0, 0, -1};
+
     projected.x /= projected.w;
     projected.y /= projected.w;
     projected.z /= projected.w;

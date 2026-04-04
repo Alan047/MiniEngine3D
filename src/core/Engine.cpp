@@ -1,6 +1,7 @@
 #include "core/Engine.hpp"
 #include <iostream>
 
+
 Engine::Engine() 
     :   window(800, 600), 
         running(true),
@@ -8,31 +9,39 @@ Engine::Engine()
         camera(800, 600)
          {
             cubeMesh = Mesh::createCube();
-            box = Mesh::loadObj("src/objetos/x_y_z.obj");
+            box = Mesh::loadObj("src/objetos/terrorist.obj");
             triangulo1 = Mesh::loadObj("src/objetos/teste.obj");
+            table = Mesh::loadObj("src/objetos/table.obj");
 
             
             
             
-            // // Cubo azul
-            // GameObject cube;
-            // cube.mesh =  &triangulo1;
-            // cube.color = 0xFF000000;
-            // cube.transform.position = { 0, 0, 1};
-            // scene.add(cube);
+            // Cubo azul
+            GameObject table01;
+            table01.mesh = &table;
+            table01.color = 0xFF0000FF;
+            table01.transform.position = { 0, 0, 10};
+            table01.transform.scale = {2, 2, 2};
+            scene.add(table01);
 
-            // GameObject triangulo02;
-            // cube.mesh = &box;
-            // cube.color = 0xFF000000;
-            // cube.transform.position = { -2, 1, 4};
-            // scene.add(triangulo02);
+            GameObject triangulo02(1);
+            triangulo02.mesh = &cubeMesh;
+            triangulo02.color = 0xFF00FF00;
+            triangulo02.transform.position = { -2, 0, 0};
+            triangulo02.transform.scale = {0.1f, 0.1f, 0.1f};
+            scene.add(triangulo02);
             
             // box azul
             GameObject box1;
             box1.mesh = &triangulo1;
             // box1.color = 0xFF202020;
-            box1.transform.position = { 0, 0, 10};
+            box1.transform.position = { 0, 0, -20};
+            box1.transform.scale = {5, 5, 5};
             scene.add(box1);
+
+            // GameObject obj01;
+            // obj01.transform.position = {0, -1, -5};
+            // scene.add(obj01);
             
             // GameObject triag;
             // triag.mesh = &triangulo1;
@@ -42,19 +51,36 @@ Engine::Engine()
 
          } // Inicialização lista: inicializa membros antes do corpo do construtor
 
-// Vec3 posCamera = {0, 0, -5};
+
 
 void Engine::run()
 {
+    Vec3 posCamera = {0, 1, 5};
+    camera.setPosition(posCamera);
+
+
     while (running) {
         running = window.pollEvents();
+
+        const uint8_t* keys = SDL_GetKeyboardState(NULL);
+        
+        int mouseX, mouseY;
+        
+        SDL_GetRelativeMouseState(&mouseX, &mouseY);
+
+
+        float deltaTime = 0.016f; // temporário (~60 FPS)
+
+        camera.update(deltaTime, keys);
+
+        camera.processMouseMovement(mouseX, mouseY);
 
         renderer.clear(0xFF202020); // cinza escuro
 
         // Adicone tudo aqui
         //===========================================
 
-        // camera.setPosition(posCamera);
+        
         Mat4 projection = camera.getProjectionMatrix();
         Mat4 view = camera.getViewMatrix();
 
@@ -62,7 +88,7 @@ void Engine::run()
 
         for (auto& obj : scene.objects)
         {
-            obj.transform.rotation.y += 0.001f;
+            // obj.transform.rotation.y += 0.001f;
             // obj.transform.position.z -= 0.05f;
 
             Mat4 model = obj.transform.getModelMatrix();
@@ -78,14 +104,17 @@ void Engine::run()
                 Vec3 v0 = projected[t.a];
                 Vec3 v1 = projected[t.b];
                 Vec3 v2 = projected[t.c];
-                
-                // Desenha o Triangulo
-                renderer.drawTriangle(v0, v1, v2, obj.color);
 
-                // Wireframe(debug)
-                renderer.drawLine(v0.x, v0.y, v1.x, v1.y, 0xFF00FF00); // verde
-                renderer.drawLine(v1.x, v1.y, v2.x, v2.y, 0xFF0000FF); // azul
-                renderer.drawLine(v2.x, v2.y, v0.x, v0.y, 0xFFFF0000); // vermelho
+                if (v0.z < 0 || v1.z < 0 || v2.z < 0) {
+                
+                    // Desenha o Triangulo
+                    renderer.drawTriangle(v0, v1, v2, obj.color);
+
+                    // Wireframe(debug)
+                    renderer.drawLine(v0.x, v0.y, v1.x, v1.y, 0xFFFF0000); // verde
+                    renderer.drawLine(v1.x, v1.y, v2.x, v2.y, 0xFFFF0000); // azul
+                    renderer.drawLine(v2.x, v2.y, v0.x, v0.y, 0xFFFF0000); // vermelho
+                }
                 
                 
             }
@@ -122,7 +151,7 @@ void Engine::drawGrid() {
         Vec4 c_view = view * c;
         Vec4 d_view = view * d;
 
-        float near = -0.1f;
+        float near = 0.1f;
 
         // ===== LINHAS DO EIXO X =====
         {
@@ -196,11 +225,11 @@ void Engine::drawGrid() {
 bool Engine::clipLineNear(Vec4& a, Vec4& b, float near)
 {
     // ambos inválidos (atrás da câmera)
-    if (a.z >= near && b.z >= near)
+    if (a.z <= near && b.z <= near)
         return false;
 
     // ambos válidos
-    if (a.z < near && b.z < near)
+    if (a.z > near && b.z > near)
         return true;
 
     // um válido, outro não → calcular interseção
@@ -213,7 +242,7 @@ bool Engine::clipLineNear(Vec4& a, Vec4& b, float near)
         1.0f
     };
 
-    if (a.z >= near)
+    if (a.z <= near)
         a = intersect;
     else
         b = intersect;

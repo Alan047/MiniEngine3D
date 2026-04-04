@@ -21,6 +21,8 @@ Window_SDL::Window_SDL(int width, int height)
         0
     );
 
+    SDL_SetRelativeMouseMode(SDL_TRUE);
+
     renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
 }
 

@@ -15,6 +15,8 @@ Mat4 Transform::getModelMatrix() const
 
     Mat4 r = Mat4::rotationY(rotation.y);
 
+    Mat4 s = Mat4::scale(scale.x, scale.y, scale.z);
+
     // por enquanto ignoramos escala e outras rotações
-    return t * r;
+    return t * r * s;
 }

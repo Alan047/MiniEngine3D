@@ -11,6 +11,7 @@ public:
     uint32_t color;
 
     GameObject();
+    GameObject(int op);
 
     Mesh CarregarMesh(const std::string& path);
 };
