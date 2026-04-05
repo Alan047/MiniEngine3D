@@ -18,6 +18,7 @@ public:
     Vec3 project(const Vec3& point, const Mat4& mvp);
     void drawLine(int x0, int y0, int x1, int y1, uint32_t color);
     void drawTriangle(const Vec3& v0, const Vec3& v1, const Vec3& v2, uint32_t color);
+    bool projecSafe(const Vec3& point, const Mat4& mvp, Vec3& out);
 
 private:
     SDL_Renderer* renderer;

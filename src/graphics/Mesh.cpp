@@ -19,23 +19,23 @@ Mesh Mesh::createCube()
     };
 
     cube.triangles = {
-        // Frente
-        {0,1,2}, {0,2,3},
+        // frente (-Z)
+    {0,1,2}, {0,2,3},
 
-        // Trás
-        {4,6,5}, {4,7,6},
+    // trás (+Z)
+    {5,4,7}, {5,7,6},
 
-        // Esquerda
-        {0,3,7}, {0,7,4},
+    // esquerda
+    {4,0,3}, {4,3,7},
 
-        // Direita
-        {1,5,6}, {1,6,2},
+    // direita
+    {1,5,6}, {1,6,2},
 
-        // Topo
-        {3,2,6}, {3,6,7},
+    // topo
+    {3,2,6}, {3,6,7},
 
-        // Base
-        {0,4,5}, {0,5,1}
+    // base
+    {4,5,1}, {4,1,0}
     };
 
     return cube;
@@ -85,7 +85,7 @@ Mesh Mesh::loadObj(const std::string& path)
             float x, y, z;
             ss >> x >> y >> z;
             obj.vertices.push_back({x, y, z});
-            std::cout << line << std::endl;
+            
         }
 
         //FACES

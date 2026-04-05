@@ -1,4 +1,5 @@
 #include "graphics/SoftwareRenderer.hpp"
+#include "core/config.hpp"
 #include <algorithm>
 
 
@@ -65,8 +66,8 @@ void SoftwareRenderer::drawPixel(int x, int y, uint32_t color)
     framebuffer[y * width + x] = color;
 }
 
-Vec3 SoftwareRenderer::project(const Vec3& point,
-                                const Mat4& mvp)
+Vec3 SoftwareRenderer::project(const Vec3& point,   // A função de criar o grid está usando essa projecão.
+                                const Mat4& mvp)    // Para usar a ProjectSafe tem que implantar na do grid.
 {
     Vec4 v(point.x, point.y, point.z, 1.0f);
     Vec4 projected = mvp * v;
@@ -178,6 +179,24 @@ void SoftwareRenderer::drawTriangle(const Vec3& v0,
             }
         }
     }
+}
+
+bool SoftwareRenderer::projecSafe(const Vec3& point, const Mat4& mvp, Vec3& out)
+{
+    Vec4 v(point.x, point.y, point.z, 1.0f);
+    Vec4 p = mvp * v;
+
+    if(p.w <= 0.0f) return false;
+
+    p.x /= p.w;
+    p.y /= p.w;
+    p.z /= p.w;
+
+    out.x = (p.x + 1.0f) * 0.5f * WIDTH;
+    out.y = (1.0f - p.y) * 0.5f * HEIGHT;
+    out.z = p.z;
+
+    return true;
 }
 
 // Funções Auxiliares

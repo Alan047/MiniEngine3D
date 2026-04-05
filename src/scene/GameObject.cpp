@@ -5,9 +5,10 @@
     
 // }
 
-GameObject::GameObject() : color(0xFFFFFFFF) {
-    Mesh cube = Mesh::createCube();
-    mesh = &cube;
+GameObject::GameObject() :  color(0xFFFFFFFF),
+                            mesh(Mesh::createCube()) {
+    
+    
 }
 
 GameObject::GameObject(int op) :color(0xFFFFFFFF) {

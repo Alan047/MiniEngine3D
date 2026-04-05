@@ -7,7 +7,7 @@
 class GameObject {
 public:
     Transform transform;
-    Mesh* mesh;
+    Mesh mesh;
     uint32_t color;
 
     GameObject();

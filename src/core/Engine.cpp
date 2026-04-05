@@ -1,4 +1,5 @@
 #include "core/Engine.hpp"
+#include "math/Vec3.hpp"
 #include <iostream>
 
 
@@ -8,55 +9,27 @@ Engine::Engine()
         renderer(window.getRenderer(), 800, 600),
         camera(800, 600)
          {
-            cubeMesh = Mesh::createCube();
-            box = Mesh::loadObj("src/objetos/terrorist.obj");
-            triangulo1 = Mesh::loadObj("src/objetos/teste.obj");
-            table = Mesh::loadObj("src/objetos/table.obj");
-
             
             
+            GameObject obj01;
+            obj01.transform.position = {0, 1, 0};
+            scene.add(obj01);
+
+            GameObject terrorista;
+            terrorista.transform.position = {4, 0, 0};
+            terrorista.color = 0xFF00FF00;
+            terrorista.mesh = Mesh::loadObj("src/objetos/bule.obj");
+            scene.add(terrorista);
             
-            // Cubo azul
-            GameObject table01;
-            table01.mesh = &table;
-            table01.color = 0xFF0000FF;
-            table01.transform.position = { 0, 0, 10};
-            table01.transform.scale = {2, 2, 2};
-            scene.add(table01);
 
-            GameObject triangulo02(1);
-            triangulo02.mesh = &cubeMesh;
-            triangulo02.color = 0xFF00FF00;
-            triangulo02.transform.position = { -2, 0, 0};
-            triangulo02.transform.scale = {0.1f, 0.1f, 0.1f};
-            scene.add(triangulo02);
-            
-            // box azul
-            GameObject box1;
-            box1.mesh = &triangulo1;
-            // box1.color = 0xFF202020;
-            box1.transform.position = { 0, 0, -20};
-            box1.transform.scale = {5, 5, 5};
-            scene.add(box1);
-
-            // GameObject obj01;
-            // obj01.transform.position = {0, -1, -5};
-            // scene.add(obj01);
-            
-            // GameObject triag;
-            // triag.mesh = &triangulo1;
-            // triag.color = 0xFF0000FF;
-            // triag.transform.position = {0, -1, 80};
-            // scene.add(triag);
-
-         } // Inicialização lista: inicializa membros antes do corpo do construtor
-
+         } 
 
 
 void Engine::run()
 {
     Vec3 posCamera = {0, 1, 5};
     camera.setPosition(posCamera);
+
 
 
     while (running) {
@@ -81,42 +54,69 @@ void Engine::run()
         //===========================================
 
         
-        Mat4 projection = camera.getProjectionMatrix();
         Mat4 view = camera.getViewMatrix();
+        Mat4 projection = camera.getProjectionMatrix();
 
         drawGrid();
 
+        std::system("cls");
+
+        std::cout << camera.getPositionCamera().x
+                  << camera.getPositionCamera().y
+                  << camera.getPositionCamera().z << "\n";
+
         for (auto& obj : scene.objects)
         {
-            // obj.transform.rotation.y += 0.001f;
-            // obj.transform.position.z -= 0.05f;
-
+            
             Mat4 model = obj.transform.getModelMatrix();
             Mat4 mvp = projection * view * model;
 
-            std::vector<Vec3> projected;
+            std::vector<Vec3> projected(obj.mesh.vertices.size());
+            std::vector<bool> valid(obj.mesh.vertices.size());
 
-            for (const auto& v : obj.mesh->vertices) 
-                projected.push_back(renderer.project(v, mvp));
-
-            for (const auto& t : obj.mesh->triangles)
+            for (int i = 0; i < obj.mesh.vertices.size(); i++) 
             {
-                Vec3 v0 = projected[t.a];
-                Vec3 v1 = projected[t.b];
-                Vec3 v2 = projected[t.c];
+                // projected.push_back(renderer.project(obj.mesh.vertices[i], mvp));
+                valid[i] = renderer.projecSafe(obj.mesh.vertices[i], mvp, projected[i]);
+                
+            }
+                
 
-                if (v0.z < 0 || v1.z < 0 || v2.z < 0) {
-                
-                    // Desenha o Triangulo
-                    renderer.drawTriangle(v0, v1, v2, obj.color);
+            for (const auto& t : obj.mesh.triangles)
+            {
+                if (!valid[t.a] || !valid[t.b] || !valid[t.c])
+                    continue;
 
-                    // Wireframe(debug)
-                    renderer.drawLine(v0.x, v0.y, v1.x, v1.y, 0xFFFF0000); // verde
-                    renderer.drawLine(v1.x, v1.y, v2.x, v2.y, 0xFFFF0000); // azul
-                    renderer.drawLine(v2.x, v2.y, v0.x, v0.y, 0xFFFF0000); // vermelho
-                }
+                Vec3 p0 = projected[t.a];
+                Vec3 p1 = projected[t.b];
+                Vec3 p2 = projected[t.c];
+
+                Vec3 normal = Vec3::cross(p1 - p0, p2 - p0);
+
+                Vec3 center = (p0 + p1 + p2) * (1.0f / 3.0f);
+
                 
-                
+
+                // 🔥 Back-face culling (screen space)
+                float cross =
+                    (p1.x - p0.x) * (p2.y - p0.y) -
+                    (p1.y - p0.y) * (p2.x - p0.x);
+
+                if (cross < 0)
+                    continue;
+
+                                renderer.drawLine(
+                    center.x, center.y,
+                    center.x + normal.x * 20,
+                    center.y - normal.y * 20,
+                    0xFF00FF00
+                );
+
+                renderer.drawLine(p0.x, p0.y, p1.x, p1.y, 0xFFFF0000);
+                renderer.drawLine(p1.x, p1.y, p2.x, p2.y, 0xFFFF0000);
+                renderer.drawLine(p2.x, p2.y, p0.x, p0.y, 0xFFFF0000);
+
+                renderer.drawTriangle(p0, p1, p2, obj.color);
             }
         }
 

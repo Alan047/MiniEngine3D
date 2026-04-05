@@ -63,6 +63,7 @@ void Camera::update(float deltaTime, const uint8_t* keyboardState)
 {
     float speed = 3.0f * deltaTime;
 
+    
     Vec3 forward = (target - position).normalize();
     Vec3 right = Vec3::cross(forward, {0,1,0}).normalize();
 
@@ -90,12 +91,24 @@ void Camera::update(float deltaTime, const uint8_t* keyboardState)
         position = position + right * speed;
         target   = target   + right * speed;
     }
+
+    if (keyboardState[SDL_SCANCODE_SPACE])
+
+    {
+        position.y += position.y * speed;
+    }
+
+    if (keyboardState[SDL_SCANCODE_C])
+
+    {
+        position.y -= position.y * speed;
+    }
     
 }
 
 void Camera::processMouseMovement(int dx, int dy)
 {
-    std::cout << "dx: " << dx << " dy: " << dy << "\n";
+    // std::cout << "dx: " << dx << " dy: " << dy << "\n";
 
     yaw += dx * sensitivity;
     pitch -= dy * sensitivity;
@@ -115,4 +128,9 @@ void Camera::processMouseMovement(int dx, int dy)
     direction = direction.normalize();
 
     target = position + direction;
+}
+
+Vec3 Camera::getPositionCamera()
+{
+    return position;
 }

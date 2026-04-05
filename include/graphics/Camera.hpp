@@ -17,6 +17,7 @@ public:
     bool isBackFacing(const Vec3& a, const Vec3& b, const Vec3& c);
     void update(float deltaTime, const uint8_t* keyboardState);
     void processMouseMovement(int dx, int dy);
+    Vec3 getPositionCamera();
 
 private:
     Vec3 position;

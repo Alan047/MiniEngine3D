@@ -22,9 +22,5 @@ private:
     float angle;
     Scene scene;
     Camera camera;
-    Mesh cubeMesh;
-    Mesh box;
-    Mesh triangulo1;
-    Mesh table;
     
 };
